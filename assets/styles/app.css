@@ -42,6 +42,25 @@ h6,
     --bs-body-font-family: "Roboto", sans-serif;
 }
 
+:root {
+    --bs-body-font-family: "Roboto", sans-serif;
+        /* Couleurs "app" (mode clair par défaut) */
+    --app-bg: #ffffff;
+    --app-surface: rgb(247, 248, 252); /* ex: .statisfied */
+    --app-text: rgb(13, 22, 27);
+    --app-muted: rgba(13, 22, 27, 0.6);
+    --app-border: rgb(213, 215, 217);
+}
+
+/* Surcharge automatique quand <html data-bs-theme="dark"> */
+html[data-bs-theme="dark"] {
+    --app-bg: #0b0f14;
+    --app-surface: #0f1620;
+    --app-text: rgba(255, 255, 255, 0.92);
+    --app-muted: rgba(255, 255, 255, 0.65);
+    --app-border: rgba(255, 255, 255, 0.14);
+}
+
 /*--------------------------------------------------------------
 # Navbar
 --------------------------------------------------------------*/
