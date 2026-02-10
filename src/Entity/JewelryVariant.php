@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\JewelryColor;
 use App\Repository\JewelryVariantRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
@@ -68,6 +69,9 @@ class JewelryVariant
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,16 +89,23 @@ class JewelryVariant
         return $this;
     }
 
-    public function getColor(): JewelryColor
+    // Pour EasyAdmin / Forms : STRING
+    public function getColor(): string
     {
-        return JewelryColor::from($this->color);
+        return $this->color;
     }
 
-    public function setColor(JewelryColor $color): self
+    public function setColor(JewelryColor|string $color): self
     {
-        $this->color = $color->value;
+        $this->color = $color instanceof JewelryColor ? $color->value : $color;
 
         return $this;
+    }
+
+    // Pour le code métier : ENUM (optionnel)
+    public function getColorEnum(): JewelryColor
+    {
+        return JewelryColor::from($this->color);
     }
 
     public function getPriceCents(): int
@@ -166,7 +177,19 @@ class JewelryVariant
         return sprintf(
             '%s (%s)',
             $this->jewelry?->getName() ?? 'Bijou',
-            $this->getColor()->label()
+            $this->getColorEnum()->label()
         );
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

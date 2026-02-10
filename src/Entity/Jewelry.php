@@ -116,4 +116,42 @@ class Jewelry
     {
         return $this->name ?? '';
     }
+
+    public function getVariantsSummary(): string
+    {
+        $lines = [];
+
+        foreach ($this->getVariants() as $variant) {
+            $labelColor = match ($variant->getColor()) {
+                'silver' => 'Argent',
+                'gold'   => 'Or',
+                default  => $variant->getColor(),
+            };
+
+            $price = number_format($variant->getPriceCents() / 100, 2, ',', ' ') . ' €';
+            $qty   = $variant->getQuantity();
+
+            $img = $variant->getImageName()
+                ? sprintf(
+                    '<img src="/images/jewelry/%s" style="height:38px;border-radius:6px;margin-right:8px;object-fit:cover;">',
+                    htmlspecialchars($variant->getImageName(), ENT_QUOTES)
+                )
+                : '';
+
+            $desc = $variant->getDescription()
+                ? ' — <em style="opacity:.85">' . nl2br(htmlspecialchars((string) $variant->getDescription(), ENT_QUOTES)) . '</em>'
+                : '';
+
+            $lines[] = sprintf(
+                '%s<strong>%s</strong> — %s — stock: %d%s',
+                $img,
+                $labelColor,
+                $price,
+                $qty,
+                $desc
+            );
+        }
+
+        return $lines ? implode('<br>', $lines) : '<em>Aucun détail</em>';
+    }
 }
