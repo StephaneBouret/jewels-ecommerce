@@ -1561,6 +1561,26 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     controllers_json?: scalar|null|Param, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
+ * @psalm-type MisdPhoneNumberConfig = array{
+ *     twig?: array{
+ *         enabled?: scalar|null|Param, // Default: true
+ *         default_region?: scalar|null|Param, // Default: "ZZ"
+ *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 0
+ *     },
+ *     form?: array{
+ *         enabled?: scalar|null|Param, // Default: true
+ *     },
+ *     serializer?: array{
+ *         enabled?: scalar|null|Param, // Default: true
+ *         default_region?: scalar|null|Param, // Default: "ZZ"
+ *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 0
+ *     },
+ *     validator?: array{
+ *         enabled?: scalar|null|Param, // Default: true
+ *         default_region?: scalar|null|Param, // Default: "ZZ"
+ *         format?: \libphonenumber\PhoneNumberFormat::E164|\libphonenumber\PhoneNumberFormat::INTERNATIONAL|\libphonenumber\PhoneNumberFormat::NATIONAL|\libphonenumber\PhoneNumberFormat::RFC3966|Param, // Default: 1
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1576,6 +1596,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     monolog?: MonologConfig,
  *     vich_uploader?: VichUploaderConfig,
  *     twig_component?: TwigComponentConfig,
+ *     misd_phone_number?: MisdPhoneNumberConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1594,6 +1615,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         maker?: MakerConfig,
  *         vich_uploader?: VichUploaderConfig,
  *         twig_component?: TwigComponentConfig,
+ *         misd_phone_number?: MisdPhoneNumberConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1610,6 +1632,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         vich_uploader?: VichUploaderConfig,
  *         twig_component?: TwigComponentConfig,
+ *         misd_phone_number?: MisdPhoneNumberConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1627,6 +1650,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         vich_uploader?: VichUploaderConfig,
  *         twig_component?: TwigComponentConfig,
+ *         misd_phone_number?: MisdPhoneNumberConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
