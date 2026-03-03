@@ -79,6 +79,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[AssertPhoneNumber(defaultRegion: 'FR')]
     private ?PhoneNumber $phone = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Avatar $avatar = null;
+
     public function __toString()
     {
         return "{$this->firstname} {$this->lastname}";
@@ -245,5 +248,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullname(): string
     {
         return "{$this->firstname} {$this->lastname}";
+    }
+
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Avatar $avatar): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($avatar === null && $this->avatar !== null) {
+            $this->avatar->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($avatar !== null && $avatar->getUser() !== $this) {
+            $avatar->setUser($this);
+        }
+
+        $this->avatar = $avatar;
+
+        return $this;
     }
 }
