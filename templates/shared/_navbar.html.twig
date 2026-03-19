@@ -17,7 +17,11 @@
 			</ul>
 			<ul class="navbar-nav q6csu5">
 				{% if app.user %}
-					{# TODO is_granted ROLE_ADMIN => path('admin') #}
+					{% if is_granted('ROLE_ADMIN') %}
+						<li class="nav-item">
+							<a href="{{ path('admin') }}" class="nav-link">Administration</a>
+						</li>
+					{% endif %}
 					<div class="btn-group">
 						<button class="dropdown-toggle btn-dropdown-user" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 							<div class="sc-gravatar">
@@ -27,8 +31,8 @@
 						<ul
 							class="dropdown-menu dropdown-menu-lg-end py-0">
 							{# <li class="py-2 px-2">
-															<a class="dropdown-item dropdown-user color-btn-logout" href="{{path('app_profile')}}">Profil</a>
-														</li> #}
+																						<a class="dropdown-item dropdown-user color-btn-logout" href="{{path('app_profile')}}">Profil</a>
+																					</li> #}
 							<div class="space-between"></div>
 							<li class="py-2 px-2">
 								<a class="dropdown-item dropdown-user color-btn-logout" href="{{ path('app_logout') }}">Se déconnecter</a>
