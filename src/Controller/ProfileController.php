@@ -76,7 +76,7 @@ final class ProfileController extends AbstractController
                 $password = $userPasswordHasher->hashPassword($user, $newPassword);
 
                 $user->setPassword($password);
-                // $user->invalidateTrustedDevices();
+                $user->invalidateTrustedDevices();
                 $em->flush();
 
                 $this->addFlash('success', 'Votre mot de passe a bien été mis à jour');

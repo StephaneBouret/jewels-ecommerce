@@ -62,7 +62,7 @@ final class PasswordResetService
     {
         $hasedPassword = $hasher->hashPassword($user, $plainPassword);
         $user->setPassword($hasedPassword);
-        // TODO $user->invalidateTrustedDevices();
+        $user->invalidateTrustedDevices();
         $user->setResetToken(null)
             ->setCreatedTokenAt(null);
 
