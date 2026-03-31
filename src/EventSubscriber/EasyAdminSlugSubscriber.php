@@ -9,28 +9,71 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class EasyAdminSlugSubscriber implements EventSubscriberInterface
 {
-    public function __construct(protected SluggerInterface $slugger) {}
+    public function __construct(
+        private SluggerInterface $slugger
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
         return [
-            BeforeEntityPersistedEvent::class => 'setSlug',
-            BeforeEntityUpdatedEvent::class => 'setSlug',
+            BeforeEntityPersistedEvent::class => 'onBeforePersist',
+            BeforeEntityUpdatedEvent::class => 'onBeforeUpdate',
         ];
     }
 
-    public function setSlug(BeforeEntityPersistedEvent|BeforeEntityUpdatedEvent $event): void
+    public function onBeforePersist(BeforeEntityPersistedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
-        if (method_exists($entity, 'getName')) {
-            $name = $entity->getName();
-            $slug = $this->slugger->slug($name)->lower();
-            $firstLetter = ucfirst($name);
+        if (!$this->supports($entity)) {
+            return;
+        }
 
-            $entity->setSlug($slug)
-                ->setName($firstLetter);
+        $this->normalizeNameAndSlug($entity, true);
+    }
+
+    public function onBeforeUpdate(BeforeEntityUpdatedEvent $event): void
+    {
+        $entity = $event->getEntityInstance();
+
+        if (!$this->supports($entity)) {
+            return;
+        }
+
+        $this->normalizeNameAndSlug($entity, false);
+    }
+
+    private function supports(object $entity): bool
+    {
+        return method_exists($entity, 'getName')
+            && method_exists($entity, 'setName')
+            && method_exists($entity, 'getSlug')
+            && method_exists($entity, 'setSlug');
+    }
+
+    private function normalizeNameAndSlug(object $entity, bool $isNew): void
+    {
+        $name = trim((string) $entity->getName());
+
+        if ($name == '') {
+            return;
+        }
+
+        // Normalisation légère du nom
+        $normalizedName = mb_convert_case($name, MB_CASE_TITLE, 'UTF-8');
+        $entity->setName($normalizedName);
+
+        $newSlug = (string) $this->slugger->slug($normalizedName)->lower();
+        $currentSlug = (string) ($entity->getSlug() ?? '');
+
+        if ($isNew || $currentSlug === '') {
+            $entity->setSlug($newSlug);
+            return;
+        }
+
+        // Si le slug actuel correspond déjà au nom normalisé, on ne touche à rien
+        if ($currentSlug !== $newSlug) {
+            $entity->setSlug($newSlug);
         }
     }
 }
-

@@ -9,6 +9,10 @@ use App\Repository\JewelryRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Ce bijou existe déjà. Modifiez-le et ajoutez une variante au lieu de créer un nouveau bijou.'
+)]
 #[UniqueEntity(fields: ['slug'], message: 'Ce slug est déjà utilisé.')]
 #[ORM\Entity(repositoryClass: JewelryRepository::class)]
 class Jewelry
@@ -18,7 +22,7 @@ class Jewelry
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank(message: "Le nom est obligatoire")]
     #[Assert\Length(min: 5, minMessage: "Le nom doit avoir au moins {{ limit }} caractères")]
     private ?string $name = null;
@@ -33,7 +37,12 @@ class Jewelry
     /**
      * @var Collection<int, JewelryVariant>
      */
-    #[ORM\OneToMany(targetEntity: JewelryVariant::class, mappedBy: 'jewelry', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: JewelryVariant::class,
+        mappedBy: 'jewelry',
+        cascade: ['persist'],
+        orphanRemoval: true
+    )]
     private Collection $variants;
 
     public function __construct()
@@ -53,7 +62,7 @@ class Jewelry
 
     public function setName(string $name): static
     {
-        $this->name = $name;
+        $this->name = trim($name);
 
         return $this;
     }
@@ -103,7 +112,6 @@ class Jewelry
     public function removeVariant(JewelryVariant $variant): static
     {
         if ($this->variants->removeElement($variant)) {
-            // set the owning side to null (unless already changed)
             if ($variant->getJewelry() === $this) {
                 $variant->setJewelry(null);
             }

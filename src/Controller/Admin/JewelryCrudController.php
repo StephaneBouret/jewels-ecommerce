@@ -2,19 +2,18 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Jewelry;
 use App\Entity\Category;
-use Doctrine\ORM\QueryBuilder;
+use App\Entity\Jewelry;
 use App\Form\JewelryVariantFormType;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class JewelryCrudController extends AbstractCrudController
 {
@@ -44,35 +43,42 @@ class JewelryCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        // --- Champs communs
         $id = IdField::new('id')->hideOnForm();
-        $name = TextField::new('name', 'Nom du bijou');
-        $slug = TextField::new('slug', 'Slug');
+
+        $name = TextField::new('name', 'Nom du bijou')
+            ->setHelp('Un bijou ne doit être créé qu\'une seule fois. Utilisez ensuite les variantes pour gérer argent, or, etc.');
+
         $category = AssociationField::new('category', 'Catégorie du bijou')
             ->setQueryBuilder(
-                fn(QueryBuilder $queryBuilder) => $queryBuilder->getEntityManager()->getRepository(Category::class)->createQueryBuilder('c')->orderBy('c.name')
+                fn(QueryBuilder $queryBuilder) => $queryBuilder
+                    ->getEntityManager()
+                    ->getRepository(Category::class)
+                    ->createQueryBuilder('c')
+                    ->orderBy('c.name', 'ASC')
             )
             ->autocomplete();
 
-        // --- Résumé HTML des variants (index uniquement)
         $variantsSummary = TextField::new('variantsSummary', 'Détails du bijou')
             ->onlyOnIndex()
             ->renderAsHtml();
 
-        // --- Variants (formulaire new/edit uniquement)
+        $variantsDetail = TextField::new('variantsSummary', 'Détails du bijou')
+            ->onlyOnDetail()
+            ->renderAsHtml();
+
         $variants = CollectionField::new('variants', 'Détails du bijou')
             ->onlyOnForms()
             ->setEntryType(JewelryVariantFormType::class)
             ->allowAdd()
             ->allowDelete()
-            ->renderExpanded();
+            ->renderExpanded()
+            ->setHelp('Ajoutez ici les déclinaisons du même bijou : argent, or, etc.');
 
         if (Crud::PAGE_INDEX === $pageName) {
             return [
                 $id,
                 $name,
                 $category,
-                $slug,
                 $variantsSummary,
             ];
         }
@@ -82,16 +88,13 @@ class JewelryCrudController extends AbstractCrudController
                 $id,
                 $name,
                 $category,
-                $slug,
-                TextField::new('variantsSummary', 'Détails du bijou')->renderAsHtml(),
+                $variantsDetail,
             ];
         }
 
-        // NEW/EDIT
         return [
             $name,
             $category,
-            $slug,
             $variants,
         ];
     }
