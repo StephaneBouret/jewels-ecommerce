@@ -1,7 +1,143 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello HomeController!
+{% endblock %}
 
 {% block body %}
-<h1>Accueil</h1>
+	<main class="main">
+		<section class="uyf49g jt7hed">
+			<div class="container">
+				<div class="ttjuvm">
+					<div class="vpc9d0">
+						<div class="row align-items-center">
+							<div class="col-lg-6">
+								<div class="content">
+									<span class="fssizf">Nouveautés</span>
+									<h1 class="nc565m">Découvrez notre
+										<span class="yi8mzl">dernière</span>
+										collection</h1>
+									<p class="uz2n9l">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.</p>
+									<div class="pn5qdf">
+										<a href="#" class="btn kvb03f">
+											Dernières arrivées
+											<i class="bi bi-arrow-right"></i>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="ayezi4">
+									<div class="mk0f18">
+										{% for product in heroProducts %}
+											<div class="nfd3vt">
+												<div class="nisx9y">
+													{% if product.imageName %}
+														<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ product.jewelry.name }}" class="do7vwi">
+													{% endif %}
+												</div>
+												<div class="vo0pn9">
+													<h4 class="q6cyua">{{ product.jewelry.name }}</h4>
+													<p class="mb-0">
+														{% if product.color == 'silver' %}
+															Argent
+														{% elseif product.color == 'gold' %}
+															Or
+														{% else %}
+															{{ product.color }}
+														{% endif %}
+													</p>
+													<span class="b74fh1">{{ (product.priceCents)|amount }}</span>
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="home-products" class="home-products-section position-relative">
+			<div class="container isotope-layout" data-controller="isotope" data-isotope-layout="fitRows" data-isotope-filter="*">
+				<div class="row">
+					<div class="col-12">
+						<div class="product-filters mb-5 d-flex justify-content-center">
+							<ul class="d-flex flex-wrap gap-2 list-unstyled mb-0">
+								<li class="filter-active" data-isotope-target="filter" data-filter="*" data-action="click->isotope#filter">
+									Tous
+								</li>
+
+								{% for category in categories %}
+									<li data-isotope-target="filter" data-filter=".filter-{{ category.slug }}" data-action="click->isotope#filter">
+										{{ category.name }}
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="row product-container isotope-container" data-isotope-target="container">
+					{% for product in filteredProducts %}
+						<div class="col-md-6 col-lg-3 product-item isotope-item filter-{{ product.jewelry.category.slug }}">
+							<article class="product-card">
+								<div class="product-image">
+									{% if loop.first %}
+										<span class="badge-product">Nouveau</span>
+									{% endif %}
+
+									{% if product.imageName %}
+										<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ product.jewelry.name }}" class="img-fluid main-img">
+									{% else %}
+										<div class="product-placeholder">Aucune image</div>
+									{% endif %}
+
+									<div class="product-overlay">
+										<a href="#" class="btn-cart">
+											<i class="bi bi-cart-plus"></i>
+											Ajouter au panier
+										</a>
+										<div class="product-actions">
+											<a href="{{ path('app_product_show', {id: product.id}) }}" class="action-btn">
+												<i class="bi bi-eye"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+
+								<div class="product-info">
+									<h5 class="product-title">
+										{{ product.jewelry.name }}
+										—
+										{% if product.color == 'silver' %}
+											Argent
+										{% elseif product.color == 'gold' %}
+											Or
+										{% else %}
+											{{ product.color }}
+										{% endif %}
+									</h5>
+
+									<div class="product-price">
+										<span class="current-price">{{ product.priceCents|amount }}</span>
+									</div>
+								</div>
+							</article>
+						</div>
+					{% else %}
+						<div class="col-12">
+							<p class="text-center mb-0">Aucun produit à afficher pour le moment.</p>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="text-center mt-5">
+					<a href="#" class="view-all-btn">Voir tous les produits
+						<i class="bi bi-arrow-right"></i>
+					</a>
+				</div>
+			</div>
+		</section>
+	</main>
 {% endblock %}

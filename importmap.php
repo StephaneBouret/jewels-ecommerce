@@ -43,4 +43,31 @@ return [
         'version' => '1.13.1',
         'type' => 'css',
     ],
+    'isotope-layout' => [
+        'version' => '3.0.6',
+    ],
+    'outlayer' => [
+        'version' => '2.1.1',
+    ],
+    'get-size' => [
+        'version' => '2.0.3',
+    ],
+    'desandro-matches-selector' => [
+        'version' => '2.0.2',
+    ],
+    'fizzy-ui-utils' => [
+        'version' => '2.0.7',
+    ],
+    'masonry-layout' => [
+        'version' => '4.2.1',
+    ],
+    'ev-emitter' => [
+        'version' => '2.1.2',
+    ],
+    'imagesloaded' => [
+        'version' => '5.0.0',
+    ],
+    'drift-zoom' => [
+        'version' => '1.5.1',
+    ],
 ];

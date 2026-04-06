@@ -16,6 +16,21 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    /**
+     * @return Category[]
+     */
+    public function findUsedOnHomepage(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.jewelries', 'j')
+            ->innerJoin('j.variants', 'v')
+            ->addSelect('j')
+            ->groupBy('c.id')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Category[] Returns an array of Category objects
     //     */

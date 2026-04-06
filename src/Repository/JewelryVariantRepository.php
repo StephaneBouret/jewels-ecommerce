@@ -16,6 +16,21 @@ class JewelryVariantRepository extends ServiceEntityRepository
         parent::__construct($registry, JewelryVariant::class);
     }
 
+    /**
+     * @return JewelryVariant[]
+     */
+    public function findLatestForHomepage(int $limit = 4): array
+    {
+        return $this->createQueryBuilder('v')
+            ->addSelect('j', 'c')
+            ->join('v.jewelry', 'j')
+            ->join('j.category', 'c')
+            ->orderBy('v.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return JewelryVariant[] Returns an array of JewelryVariant objects
     //     */

@@ -24,7 +24,7 @@ class Jewelry
 
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank(message: "Le nom est obligatoire")]
-    #[Assert\Length(min: 5, minMessage: "Le nom doit avoir au moins {{ limit }} caractères")]
+    #[Assert\Length(min: 2, minMessage: "Le nom doit avoir au moins {{ limit }} caractères")]
     private ?string $name = null;
 
     #[ORM\Column(length: 191, unique: true)]

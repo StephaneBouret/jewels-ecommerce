@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ jewelry.name }}
+	—
+	{% if product.color == 'silver' %}
+		Argent
+	{% elseif product.color == 'gold' %}
+		Or
+	{% else %}
+		{{ product.color }}
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+	<main class="main">
+		<div class="page-title light-background">
+			<div class="container">
+				<nav class="breadcrumbs">
+					<ol>
+						<li>
+							<a href="{{ path('app_home') }}" class="link-to-home">Accueil</a>
+						</li>
+						<li class="current">{{ jewelry.name }}</li>
+					</ol>
+				</nav>
+				<h1>{{ jewelry.name }}</h1>
+			</div>
+		</div>
+		<section id="product-details" class="uyf49g jt7hed">
+			<div class="container" data-controller="drift">
+				<div class="row g-5">
+					<div class="col-lg-6 mb-5 mb-lg-0">
+						<div class="product-gallery">
+							<div class="thumbnails-vertical">
+								<div class="thumbnails-container">
+									{% if product.imageName %}
+										<button type="button" class="thumbnail-item active" data-drift-target="thumbnail" data-action="click->drift#changeImage" data-image="{{ asset('images/jewelry/' ~ product.imageName) }}" data-zoom="{{ asset('images/jewelry/' ~ product.imageName) }}">
+											<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ jewelry.name }}" class="img-fluid">
+										</button>
+									{% endif %}
+
+									{% for variant in variants %}
+										{% if variant.id != product.id and variant.imageName %}
+											<button type="button" class="thumbnail-item" data-drift-target="thumbnail" data-action="click->drift#changeImage" data-image="{{ asset('images/jewelry/' ~ variant.imageName) }}" data-zoom="{{ asset('images/jewelry/' ~ variant.imageName) }}">
+												<img src="{{ asset('images/jewelry/' ~ variant.imageName) }}" alt="{{ jewelry.name }}" class="img-fluid">
+											</button>
+										{% endif %}
+									{% endfor %}
+								</div>
+							</div>
+							<div class="main-image-wrapper">
+								<div class="image-zoom-container">
+									{% if product.imageName %}
+										<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ jewelry.name }}" class="img-fluid main-image drift-zoom" id="main-product-image" data-drift-target="mainImage" data-zoom="{{ asset('images/jewelry/' ~ product.imageName) }}">
+									{% else %}
+										<div class="product-placeholder text-center py-5">
+											Aucune image disponible
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-6">
+						<div class="product-info-wrapper" id="product-info-sticky">
+							<div class="product-meta">
+								<div class="d-flex justify-content-between align-items-center mb-3">
+									<span class="product-category">{{ jewelry.category.name }}</span>
+								</div>
+
+								<h1 class="product-title">
+									{{ jewelry.name }}
+								</h1>
+							</div>
+
+							<div class="product-price-container">
+								<div class="price-wrapper">
+									<span class="current-price">{{ product.priceCents|amount }}</span>
+								</div>
+
+								<div class="stock-info">
+									{% if product.quantity > 0 %}
+										<i class="bi bi-check-circle-fill"></i>
+										<span>En stock</span>
+										<span class="stock-count">({{ product.quantity }}
+											article{% if product.quantity > 1 %}s{% endif %}
+											restant{% if product.quantity > 1 %}s{% endif %})
+                                        </span>
+									{% else %}
+										<i class="bi bi-x-circle-fill"></i>
+										<span>Rupture de stock</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="product-short-description">
+								<p>{{ product.description|nl2br }}</p>
+							</div>
+
+							<div class="product-options">
+								<div class="option-group">
+									<div class="option-header">
+										<h6 class="option-title">Couleur</h6>
+										<span class="selected-option">
+											{% if product.color == 'silver' %}
+												Argent
+											{% elseif product.color == 'gold' %}
+												Or
+											{% else %}
+												{{ product.color }}
+											{% endif %}
+										</span>
+									</div>
+
+									<div class="color-options">
+										{% for variant in variants %}
+											{% set colorLabel =
+                                                variant.color == 'silver' ? 'Argent' :
+                                                (variant.color == 'gold' ? 'Or' : variant.color)
+                                            %}
+
+											<a href="{{ path('app_product_show', {id: variant.id}) }}" class="color-option {{ variant.id == product.id ? 'active' : '' }}" data-color="{{ colorLabel }}" title="{{ colorLabel }}" style="
+												{% if variant.color == 'silver' %}
+													background-color: #c0c0c0;
+											    {% elseif variant.color == 'gold' %}
+													background-color: #d4af37;
+												{% else %}
+													background-color: #999;
+												{% endif %}
+												">
+												{% if variant.id == product.id %}
+													<i class="bi bi-check"></i>
+												{% endif %}
+											</a>
+										{% endfor %}
+									</div>
+								</div>
+
+                                <div class="option-group">
+                                    <h6 class="option-title">Quantité</h6>
+                                    <div
+                                        class="quantity-selector"
+                                        data-controller="quantity"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="quantity-btn decrease"
+                                            data-action="click->quantity#decrease"
+                                        >
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+
+                                        <input
+                                            type="number"
+                                            class="quantity-input"
+                                            value="1"
+                                            min="1"
+                                            max="{{ product.quantity > 0 ? product.quantity : 1 }}"
+                                            data-quantity-target="input"
+                                            data-action="input->quantity#sanitize blur->quantity#sanitize"
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="quantity-btn increase"
+                                            data-action="click->quantity#increase"
+                                        >
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+							</div>
+
+                            <div class="product-actions">
+                                <button
+                                    class="btn btn-primary add-to-cart-btn"
+                                    {% if product.quantity < 1 %}disabled{% endif %}
+                                >
+                                    <i class="bi bi-cart-plus"></i>
+                                    Ajouter au panier
+                                </button>
+                            </div>
+
+                            <div class="delivery-options">
+                                <div class="delivery-option">
+                                    <i class="bi bi-truck"></i>
+                                    <div>
+                                        <h6>Livraison soignée</h6>
+                                        <p>Expédition rapide et suivie</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-option">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                    <div>
+                                        <h6>Retour sous 14 jours</h6>
+                                        <p>Conformément aux conditions applicables</p>
+                                    </div>
+                                </div>
+                                <div class="delivery-option">
+                                    <i class="bi bi-shield-check"></i>
+                                    <div>
+                                        <h6>Paiement sécurisé</h6>
+                                        <p>Vos achats en toute sérénité</p>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	{% endblock %}
