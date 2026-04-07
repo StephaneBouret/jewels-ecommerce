@@ -31,6 +31,44 @@ class JewelryVariantRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findForCatalog(
+        ?string $categorySlug = null,
+        ?string $sort = null,
+        ?string $search = null
+    ): array {
+        $qb = $this->createQueryBuilder('v')
+            ->addSelect('j', 'c')
+            ->join('v.jewelry', 'j')
+            ->join('j.category', 'c');
+
+        if ($categorySlug && $categorySlug !== 'all') {
+            $qb->andWhere('c.slug = :categorySlug')
+                ->setParameter('categorySlug', $categorySlug);
+        }
+
+        if ($search) {
+            $qb->andWhere('LOWER(j.name) LIKE :search')
+                ->setParameter('search', '%' . mb_strtolower(trim($search)) . '%');
+        }
+
+        switch ($sort) {
+            case 'price_asc':
+                $qb->orderBy('v.priceCents', 'ASC');
+                break;
+
+            case 'price_desc':
+                $qb->orderBy('v.priceCents', 'DESC');
+                break;
+
+            case 'latest':
+            default:
+                $qb->orderBy('v.id', 'DESC');
+                break;
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return JewelryVariant[] Returns an array of JewelryVariant objects
     //     */

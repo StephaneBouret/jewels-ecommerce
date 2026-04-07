@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les produits{% endblock %}
+
+{% block body %}
+<main class="main" id="page-products">
+    <div class="page-title light-background">
+        <div class="container">
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                    <li class="current">Tous les produits</li>
+                </ol>
+            </nav>
+            <h1>Tous les produits</h1>
+        </div>
+    </div>
+
+    <div
+        class="container"
+        data-controller="catalog"
+        data-catalog-url-value="{{ path('app_product_search') }}"
+    >
+        <div class="row">
+            <div class="col-lg-4 sidebar">
+                <div class="widgets-container">
+                    <div class="widget-item">
+                        <div class="product-categories-widget">
+                            <h3 class="widget-title">Catégories</h3>
+
+                            <ul class="category-tree list-unstyled mb-0">
+                                <li class="category-item">
+                                    <button
+                                        type="button"
+                                        class="category-link {{ currentCategory == 'all' ? 'active' : '' }}"
+                                        data-action="click->catalog#changeCategory"
+                                        data-category="all"
+                                    >
+                                        Toutes
+                                    </button>
+                                </li>
+
+                                {% for category in categories %}
+                                    <li class="category-item">
+                                        <button
+                                            type="button"
+                                            class="category-link {{ currentCategory == category.slug ? 'active' : '' }}"
+                                            data-action="click->catalog#changeCategory"
+                                            data-category="{{ category.slug }}"
+                                        >
+                                            {{ category.name }}
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <section id="category-header" class="category-header section">
+                    <div class="container">
+                        <div class="filter-container mb-4">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6 col-lg-7">
+                                    <div class="filter-item search-form">
+                                        <label for="productSearch" class="form-label">Rechercher un produit</label>
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="productSearch"
+                                                placeholder="Rechercher par nom..."
+                                                value="{{ currentSearch }}"
+                                                data-catalog-target="search"
+                                                data-action="input->catalog#search"
+                                            >
+                                            <button class="btn search-btn" type="button">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-5">
+                                    <div class="filter-item">
+                                        <label for="sortBy" class="form-label">Trier par</label>
+                                        <select
+                                            class="form-select"
+                                            id="sortBy"
+                                            data-catalog-target="sort"
+                                            data-action="change->catalog#sort"
+                                        >
+                                            <option value="latest" {{ currentSort == 'latest' ? 'selected' : '' }}>
+                                                Derniers arrivés
+                                            </option>
+                                            <option value="price_asc" {{ currentSort == 'price_asc' ? 'selected' : '' }}>
+                                                Prix croissant
+                                            </option>
+                                            <option value="price_desc" {{ currentSort == 'price_desc' ? 'selected' : '' }}>
+                                                Prix décroissant
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="category-product-list" class="category-product-list section">
+                    <div class="container">
+                        <div
+                            class="row gy-4"
+                            data-catalog-target="results"
+                        >
+                            {% include 'product/_products_grid.html.twig' with { products: products } %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

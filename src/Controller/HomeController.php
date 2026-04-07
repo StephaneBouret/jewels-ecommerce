@@ -25,17 +25,4 @@ final class HomeController extends AbstractController
             'categories' => $categoryRepository->findUsedOnHomepage(),
         ]);
     }
-
-    #[Route('/produit/{id}', name: 'app_product_show', requirements: ['id' => '\d+'])]
-    public function show(JewelryVariant $product): Response
-    {
-        $jewelry = $product->getJewelry();
-        $variants = $jewelry?->getVariants() ?? [];
-
-        return $this->render('product/show.html.twig', [
-            'product' => $product,
-            'jewelry' => $jewelry,
-            'variants' => $variants,
-        ]);
-    }
 }

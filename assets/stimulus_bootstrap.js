@@ -6,6 +6,7 @@ import RegisterController from './controllers/register_controller.js';
 import IsotopeController from './controllers/isotope_controller.js';
 import DriftController from './controllers/drift_controller.js';
 import QuantityController from './controllers/quantity_controller.js';
+import CatalogController from './controllers/catalog_controller.js';
 
 const app = startStimulusApp();
 // register any custom, 3rd party controllers here
@@ -17,3 +18,4 @@ app.register('register', RegisterController);
 app.register('isotope', IsotopeController);
 app.register('drift', DriftController);
 app.register('quantity', QuantityController);
+app.register('catalog', CatalogController);
