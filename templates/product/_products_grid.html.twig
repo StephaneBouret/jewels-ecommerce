@@ -1,63 +1,59 @@
 {% for product in products %}
-    <div class="col-lg-6">
-        <div class="product-box">
-            <div class="product-thumb">
-                {% if product.imageName %}
-                    <a href="{{ path('app_product_show', {id: product.id}) }}">
-                        <img
-                            src="{{ asset('images/jewelry/' ~ product.imageName) }}"
-                            alt="{{ product.jewelry.name }}"
-                            class="main-img"
-                            loading="lazy"
-                        >
-                    </a>
-                {% else %}
-                    <div class="product-placeholder">Aucune image</div>
-                {% endif %}
+	<div class="col-lg-6">
+		<div class="product-box">
+			<div class="product-thumb">
+				{% if product.imageName %}
+					<a href="{{ path('app_product_show', {id: product.id}) }}">
+						<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ product.jewelry.name }}" class="main-img" loading="lazy">
+					</a>
+				{% else %}
+					<div class="product-placeholder">Aucune image</div>
+				{% endif %}
 
-                <div class="product-overlay">
-                    <div class="product-quick-actions">
-                        <a
-                            href="{{ path('app_product_show', {id: product.id}) }}"
-                            class="quick-action-btn"
-                        >
-                            <i class="bi bi-eye"></i>
-                        </a>
-                    </div>
+				<div class="product-overlay">
+					<div class="product-quick-actions">
+						<a href="{{ path('app_product_show', {id: product.id}) }}" class="quick-action-btn">
+							<i class="bi bi-eye"></i>
+						</a>
+					</div>
 
-                    <div class="add-to-cart-container">
-                        <button type="button" class="add-to-cart-btn">
-                            Ajouter au panier
-                        </button>
-                    </div>
-                </div>
-            </div>
+					<div
+						class="add-to-cart-container">
+						{# <button type="button" class="add-to-cart-btn">
+						                            Ajouter au panier
+						                        </button> #}
+						<button type="button" class="add-to-cart-btn" data-controller="cart" data-cart-add-url-value="{{ path('app_cart_add', {id: 0}) }}" data-action="click->cart#add" data-id="{{ product.id }}">
+							Ajouter au panier
+						</button>
+					</div>
+				</div>
+			</div>
 
-            <div class="product-content">
-                <div class="product-details">
-                    <h3 class="product-title">
-                        <a href="{{ path('app_product_show', {id: product.id}) }}">
-                            {{ product.jewelry.name }}
-                            —
-                            {% if product.color == 'silver' %}
-                                Argent
-                            {% elseif product.color == 'gold' %}
-                                Or
-                            {% else %}
-                                {{ product.color }}
-                            {% endif %}
-                        </a>
-                    </h3>
+			<div class="product-content">
+				<div class="product-details">
+					<h3 class="product-title">
+						<a href="{{ path('app_product_show', {id: product.id}) }}">
+							{{ product.jewelry.name }}
+							—
+							{% if product.color == 'silver' %}
+								Argent
+							{% elseif product.color == 'gold' %}
+								Or
+							{% else %}
+								{{ product.color }}
+							{% endif %}
+						</a>
+					</h3>
 
-                    <div class="product-price">
-                        <span>{{ product.priceCents|amount }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div class="product-price">
+						<span>{{ product.priceCents|amount }}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% else %}
-    <div class="col-12">
-        <p class="text-center mb-0">Aucun produit ne correspond à votre recherche.</p>
-    </div>
+	<div class="col-12">
+		<p class="text-center mb-0">Aucun produit ne correspond à votre recherche.</p>
+	</div>
 {% endfor %}

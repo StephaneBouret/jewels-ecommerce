@@ -4,9 +4,11 @@
 			<img src="{{ asset('img/logo.png') }}" alt="" class="me-1 vihbpq">
 			{{ appName }}
 		</a>
+
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
 		<div class="collapse navbar-collapse" id="navbarColor04">
 			<ul class="navbar-nav me-auto">
 				<li class="nav-item">
@@ -15,13 +17,25 @@
 					</a>
 				</li>
 			</ul>
-			<ul class="navbar-nav q6csu5">
+
+			<ul class="navbar-nav q6csu5 align-items-lg-center">
+				<li class="nav-item me-3">
+					<a href="{{ path('app_cart_show') }}" class="nav-link position-relative d-inline-flex align-items-center" aria-label="Voir le panier">
+						<i class="bi bi-cart3 fs-5"></i>
+						{% set cartCount = app.session.get('cart', {})|reduce((carry, qty) => carry + qty, 0) %}
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" data-cart-count>
+							{{ cartCount }}
+						</span>
+					</a>
+				</li>
+
 				{% if app.user %}
 					{% if is_granted('ROLE_ADMIN') %}
 						<li class="nav-item">
 							<a href="{{ path('admin') }}" class="nav-link">Administration</a>
 						</li>
 					{% endif %}
+
 					<div class="btn-group">
 						<button class="dropdown-toggle btn-dropdown-user" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 							<div class="sc-gravatar">
@@ -30,7 +44,7 @@
 						</button>
 						<ul class="dropdown-menu dropdown-menu-lg-end py-0">
 							<li class="py-2 px-2">
-								<a class="dropdown-item dropdown-user color-btn-logout" href="{{path('app_profile')}}">Profil</a>
+								<a class="dropdown-item dropdown-user color-btn-logout" href="{{ path('app_profile') }}">Profil</a>
 							</li>
 							<div class="space-between"></div>
 							<li class="py-2 px-2">
@@ -44,6 +58,7 @@
 					</li>
 				{% endif %}
 			</ul>
+
 			<div class="d-flex align-items-center" data-controller="theme">
 				<button type="button" class="btn btn-link nav-link px-2" aria-label="Basculer le thème" title="Basculer le thème" data-action="theme#toggle" data-theme-target="button">
 					<i class="bi bi-moon-stars" data-theme-target="icon" aria-hidden="true"></i>

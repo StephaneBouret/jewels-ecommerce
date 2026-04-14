@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\JewelryVariant;
 use App\Repository\CategoryRepository;
 use App\Repository\JewelryVariantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

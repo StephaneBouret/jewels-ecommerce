@@ -174,8 +174,21 @@
 							</div>
 
                             <div class="product-actions">
-                                <button
+                                {# <button
                                     class="btn btn-primary add-to-cart-btn"
+                                    {% if product.quantity < 1 %}disabled{% endif %}
+                                >
+                                    <i class="bi bi-cart-plus"></i>
+                                    Ajouter au panier
+                                </button> #}
+                                <button
+                                    type="button"
+                                    class="btn btn-primary add-to-cart-btn"
+                                    data-controller="cart"
+                                    data-cart-add-url-value="{{ path('app_cart_add', {id: 0}) }}"
+                                    data-action="click->cart#add"
+                                    data-id="{{ product.id }}"
+                                    data-qty-selector=".quantity-input"
                                     {% if product.quantity < 1 %}disabled{% endif %}
                                 >
                                     <i class="bi bi-cart-plus"></i>
