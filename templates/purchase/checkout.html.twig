@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation de la commande
+{% endblock %}
+
+{% block body %}
+<div class="ykzkxt d6i7ks">
+	<div class="d-flex">
+		<div class="w-100">
+			<div class="d-md-flex justify-content-md-between align-items-center spacer-section-checkout">
+				<div class="flex-fill mb-6 mb-md-0">
+					<h1 class="pr-md-6 bkicbc">Validation de la commande</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="n46nkd right">
+		<div class="main-content">
+			<div class="d-flex flex-column gap-y-8">
+
+				<div class="xo2a4n pb-7">
+					<div class="card-header">
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="d-flex flex-column">
+								<div class="d8l2ev">Compte</div>
+								<div class="card-subtitle">{{ user.email }}</div>
+							</div>
+							<a class="btn btn gy38mz" href="{{ path('app_logout') }}">Se déconnecter</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="xo2a4n pb-7">
+					<div class="card-header">
+						<div class="d-flex justify-content-between align-items-center">
+							<div class="d-flex flex-column mr-2 w-100">
+								<div class="d8l2ev">Commande</div>
+								<div class="card-body">
+									<hr class="my-6">
+
+									<dl class="d-flex flex-column gap-y-2">
+										{% for item in items %}
+											<div class="d-flex justify-content-between">
+												<dt class="font-weight-normal">
+													{{ item.product.jewelry.name }}
+													—
+													{{ item.product.colorEnum.label() }}
+													<small class="d-block text-muted">Quantité :
+														{{ item.qty }}</small>
+												</dt>
+												<dd class="text-muted">{{ item.total|amount }}</dd>
+											</div>
+										{% endfor %}
+
+										<dl class="d-flex justify-content-between mt-4">
+											<dt class="text-grey-dark">Total</dt>
+											<dd class="text-grey-dark">
+												<div class="d-flex align-items-center">
+													<span class="badge badge-grey">
+														<span>EUR</span>
+													</span>
+													<span class="ml-2">{{ total|amount }}</span>
+												</div>
+											</dd>
+										</dl>
+									</dl>
+
+									<hr class="my-6">
+
+									{{ form_start(confirmationForm) }}
+									{{ form_errors(confirmationForm) }}
+
+									<div class="mb-3">
+										{{ form_row(confirmationForm.agreeTerms, {
+											label: 'J\'accepte les <a href="' ~ path('app_terms') ~ '">conditions générales de vente</a>',
+											label_html: true
+										}) }}
+									</div>
+
+									<div class="form-text mb-4">
+										En poursuivant, vous confirmez votre commande avant le passage au paiement.
+									</div>
+
+									<button type="submit" class="btn btn-md kw41uk mt-3">
+										<span>Confirmer et passer au paiement</span>
+									</button>
+
+									{{ form_end(confirmationForm) }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="wcxpat">
+			<div class="xo2a4n">
+				<div class="zxl51y">
+					<div class="d-flex align-items-start flex-column">
+						<div class="ohcmk7 w-100">
+                            {% for item in items %}
+                                {% set product = item.product %}
+
+                                <div class="exb12e">
+                                    <div class="kf4cad">
+                                        {% if product.imageName %}
+                                            <img
+                                                src="{{ asset('images/jewelry/' ~ product.imageName) }}"
+                                                alt="{{ product.jewelry.name }}"
+                                                class="img-fluid qb53hc"
+                                            >
+                                        {% else %}
+                                            <div class="product-placeholder">Aucune image</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="kpudhh">
+                                        <h4>{{ product.jewelry.name }}</h4>
+
+                                        <p class="fal7tw">
+                                            Couleur : {{ product.getColorEnum().label() }}
+                                        </p>
+
+                                        <div class="u8orrq">
+                                            <span class="quantity">{{ item.qty }} ×</span>
+                                            <span class="price">{{ product.priceCents|amount }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        </div>
+
+						<div class="w-100">
+							<h3 class="sb9j1v mt-md-4 mb-1">Votre commande</h3>
+							<div class="d-flex flex-column">{{ total|amount }}</div>
+							<small class="text-muted mt-2">
+								{{ items|length }} ligne{% if items|length > 1 %}s{% endif %} de commande
+							</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include "shared/_footer_second.html.twig" %}
+{% endblock %}

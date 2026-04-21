@@ -1,172 +1,140 @@
 <div class="row">
-    <div class="col-lg-8">
-        <div class="cart-items">
-            <div class="cart-header d-none d-lg-block">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <h5>Produit</h5>
-                    </div>
-                    <div class="col-lg-2 text-center">
-                        <h5>Prix</h5>
-                    </div>
-                    <div class="col-lg-2 text-center">
-                        <h5>Quantité</h5>
-                    </div>
-                    <div class="col-lg-2 text-center">
-                        <h5>Total</h5>
-                    </div>
-                </div>
-            </div>
+	<div class="col-lg-8">
+		<div class="cart-items">
+			<div class="cart-header d-none d-lg-block">
+				<div class="row align-items-center">
+					<div class="col-lg-6">
+						<h5>Produit</h5>
+					</div>
+					<div class="col-lg-2 text-center">
+						<h5>Prix</h5>
+					</div>
+					<div class="col-lg-2 text-center">
+						<h5>Quantité</h5>
+					</div>
+					<div class="col-lg-2 text-center">
+						<h5>Total</h5>
+					</div>
+				</div>
+			</div>
 
-            {% for item in items %}
-                {% set product = item.product %}
-                <div class="cart-item" data-product-id="{{ product.id }}">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-12 mt-3 mt-lg-0 mb-lg-0 mb-3">
-                            <div class="cart-info d-flex align-items-center">
-                                <div class="cart-image">
-                                    {% if product.imageName %}
-                                        <img
-                                            src="{{ asset('images/jewelry/' ~ product.imageName) }}"
-                                            alt="{{ product.jewelry.name }}"
-                                            class="img-fluid"
-                                            loading="lazy"
-                                        >
-                                    {% else %}
-                                        <div class="product-placeholder">Aucune image</div>
-                                    {% endif %}
-                                </div>
+			{% for item in items %}
+				{% set product = item.product %}
+				<div class="cart-item" data-product-id="{{ product.id }}">
+					<div class="row align-items-center">
+						<div class="col-lg-6 col-12 mt-3 mt-lg-0 mb-lg-0 mb-3">
+							<div class="cart-info d-flex align-items-center">
+								<div class="cart-image">
+									{% if product.imageName %}
+										<img src="{{ asset('images/jewelry/' ~ product.imageName) }}" alt="{{ product.jewelry.name }}" class="img-fluid" loading="lazy">
+									{% else %}
+										<div class="product-placeholder">Aucune image</div>
+									{% endif %}
+								</div>
 
-                                <div class="product-details">
-                                    <h6 class="product-title">
-                                        <a href="{{ path('app_product_show', {id: product.id}) }}">
-                                            {{ product.jewelry.name }}
-                                        </a>
-                                    </h6>
+								<div class="product-details">
+									<h6 class="product-title">
+										<a href="{{ path('app_product_show', {id: product.id}) }}">
+											{{ product.jewelry.name }}
+										</a>
+									</h6>
 
-                                    <div class="product-meta">
-                                        <span class="product-color">
-                                            Couleur :
-                                            {% if product.color == 'silver' %}
-                                                Argent
-                                            {% elseif product.color == 'gold' %}
-                                                Or
-                                            {% else %}
-                                                {{ product.color }}
-                                            {% endif %}
-                                        </span>
-                                    </div>
+									<div class="product-meta">
+										<span class="product-color">
+											Couleur :
+											{% if product.color == 'silver' %}
+												Argent
+											{% elseif product.color == 'gold' %}
+												Or
+											{% else %}
+												{{ product.color }}
+											{% endif %}
+										</span>
+									</div>
 
-                                    <button
-                                        class="remove-item"
-                                        type="button"
-                                        data-action="click->cart#remove"
-                                        data-id="{{ product.id }}"
-                                    >
-                                        <i class="bi bi-trash"></i>
-                                        Supprimer
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+									<button class="remove-item" type="button" data-action="click->cart#remove" data-id="{{ product.id }}">
+										<i class="bi bi-trash"></i>
+										Supprimer
+									</button>
+								</div>
+							</div>
+						</div>
 
-                        <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
-                            <div class="price-tag">
-                                <span class="current-price">{{ product.priceCents|amount }}</span>
-                            </div>
-                        </div>
+						<div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
+							<div class="price-tag">
+								<span class="current-price">{{ product.priceCents|amount }}</span>
+							</div>
+						</div>
 
-                        <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
-                            <div class="quantity-selector">
-                                <button
-                                    class="quantity-btn decrease"
-                                    type="button"
-                                    data-action="click->cart#decrease"
-                                    data-id="{{ product.id }}"
-                                >
-                                    <i class="bi bi-dash"></i>
-                                </button>
+						<div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
+							<div class="quantity-selector">
+								<button class="quantity-btn decrease" type="button" data-action="click->cart#decrease" data-id="{{ product.id }}">
+									<i class="bi bi-dash"></i>
+								</button>
 
-                                <input
-                                    type="number"
-                                    class="quantity-input"
-                                    value="{{ item.qty }}"
-                                    min="1"
-                                    max="{{ product.quantity }}"
-                                    data-action="change->cart#changeQty"
-                                    data-id="{{ product.id }}"
-                                >
+								<input type="number" class="quantity-input" value="{{ item.qty }}" min="1" max="{{ product.quantity }}" data-action="change->cart#changeQty" data-id="{{ product.id }}">
 
-                                <button
-                                    class="quantity-btn increase"
-                                    type="button"
-                                    data-action="click->cart#increase"
-                                    data-id="{{ product.id }}"
-                                >
-                                    <i class="bi bi-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+								<button class="quantity-btn increase" type="button" data-action="click->cart#increase" data-id="{{ product.id }}">
+									<i class="bi bi-plus"></i>
+								</button>
+							</div>
+						</div>
 
-                        <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
-                            <div class="item-total">
-                                <span>{{ item.total|amount }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="cart-item">
-                    <p class="mb-0 text-center">Votre panier est vide.</p>
-                </div>
-            {% endfor %}
+						<div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
+							<div class="item-total">
+								<span>{{ item.total|amount }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div class="cart-item">
+					<p class="mb-0 text-center">Votre panier est vide.</p>
+				</div>
+			{% endfor %}
 
-            {% if items is not empty %}
-                <div class="cart-actions">
-                    <div class="row">
-                        <div class="col-lg-12 text-md-end">
-                            <button
-                                class="btn btn-outline-remove"
-                                type="button"
-                                data-action="click->cart#clear"
-                            >
-                                <i class="bi bi-trash"></i>
-                                Vider le panier
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
+			{% if items is not empty %}
+				<div class="cart-actions">
+					<div class="row">
+						<div class="col-lg-12 text-md-end">
+							<button class="btn btn-outline-remove" type="button" data-action="click->cart#clear">
+								<i class="bi bi-trash"></i>
+								Vider le panier
+							</button>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
 
-    <div class="col-lg-4 mt-4 mt-lg-0">
-        <div class="cart-summary">
-            <h4 class="summary-title">Récapitulatif</h4>
+	<div class="col-lg-4 mt-4 mt-lg-0">
+		<div class="cart-summary">
+			<h4 class="summary-title">Récapitulatif</h4>
 
-            <div class="summary-item">
-                <span class="summary-label">Articles</span>
-                <span class="summary-value">{{ count }}</span>
-            </div>
+			<div class="summary-item">
+				<span class="summary-label">Articles</span>
+				<span class="summary-value">{{ count }}</span>
+			</div>
 
-            <div class="summary-total">
-                <span class="summary-label">Total</span>
-                <span class="summary-value">{{ total|amount }}</span>
-            </div>
+			<div class="summary-total">
+				<span class="summary-label">Total</span>
+				<span class="summary-value">{{ total|amount }}</span>
+			</div>
 
-            <div class="checkout-button">
-                <a href="#" class="btn btn-accent w-100">
-                    Commander
-                    <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
+			<div class="checkout-button">
+				<a href="{{ path('app_purchase_checkout') }}" class="btn btn-accent w-100">
+					Commander
+					<i class="bi bi-arrow-right"></i>
+				</a>
+			</div>
 
-            <div class="continue-shopping">
-                <a href="{{ path('app_product_index') }}" class="btn btn-link w-100">
-                    <i class="bi bi-arrow-left"></i>
-                    Continuer mes achats
-                </a>
-            </div>
-        </div>
-    </div>
+			<div class="continue-shopping">
+				<a href="{{ path('app_product_index') }}" class="btn btn-link w-100">
+					<i class="bi bi-arrow-left"></i>
+					Continuer mes achats
+				</a>
+			</div>
+		</div>
+	</div>
 </div>
