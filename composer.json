@@ -20,6 +20,7 @@
         "scheb/2fa-bundle": "^7.13",
         "scheb/2fa-email": "^7.13",
         "scheb/2fa-trusted-device": "^7.13",
+        "stripe/stripe-php": "^20.1",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/console": "7.4.*",
@@ -51,7 +52,8 @@
         "symfony/validator": "7.4.*",
         "symfony/web-link": "7.4.*",
         "symfony/yaml": "7.4.*",
-        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/extra-bundle": "^3.24",
+        "twig/intl-extra": "^3.24",
         "twig/twig": "^2.12|^3.0",
         "vich/uploader-bundle": "^2.9"
     },

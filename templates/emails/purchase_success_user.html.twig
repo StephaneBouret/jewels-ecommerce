@@ -1,0 +1,21 @@
+<h1>Commande confirmée</h1>
+
+<p>Bonjour {{ user.firstname ?? user.email }},</p>
+
+<p>Votre commande #{{ purchase.number }} a bien été payée.</p>
+
+<p>Montant total : <strong>{{ purchase.total|amount }}</strong></p>
+
+<ul>
+    {% for item in purchase.purchaseItems %}
+        <li>
+            {{ item.productName }} — {{ item.productColor }}
+            × {{ item.quantity }}
+            — {{ item.total|amount }}
+        </li>
+    {% endfor %}
+</ul>
+
+<p>
+    <a href="{{ homeUrl }}">Retourner sur le site</a>
+</p>

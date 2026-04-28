@@ -32,3 +32,12 @@ services:
 
     auth_mailer:
         class: App\Service\SendEmail2faService
+
+    App\Stripe\StripeService:
+        arguments:
+            $secretKey: '%env(STRIPE_SECRET_KEY)%'
+            $publicKey: '%env(STRIPE_PUBLIC_KEY)%'
+
+    App\EventDispatcher\PurchaseEmailSuccessSubscriber:
+        arguments:
+            $defaultFrom: "%env(MAILER_DEFAULT_FROM)%"

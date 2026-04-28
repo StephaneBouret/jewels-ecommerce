@@ -95,10 +95,6 @@
 
 									<div
 										class="product-overlay">
-										{# <a href="#" class="btn-cart">
-																					<i class="bi bi-cart-plus"></i>
-																					Ajouter au panier
-																				</a> #}
 										<button type="button" class="btn-cart" data-controller="cart" data-cart-add-url-value="{{ path('app_cart_add', {id: 0}) }}" data-action="click->cart#add" data-id="{{ product.id }}">
 											<i class="bi bi-cart-plus"></i>
 											Ajouter au panier
@@ -144,5 +140,6 @@
 				</div>
 			</div>
 		</section>
+        {% include "shared/_footer_second.html.twig" %}
 	</main>
 {% endblock %}

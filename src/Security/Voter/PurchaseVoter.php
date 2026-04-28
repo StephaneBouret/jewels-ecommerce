@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 final class PurchaseVoter extends Voter
 {
     public const VIEW = 'PURCHASE_VIEW';
+    public const PAY = 'PURCHASE_PAY';
 
     public function __construct(
         private Security $security
@@ -18,7 +19,8 @@ final class PurchaseVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::VIEW && $subject instanceof Purchase;
+        return in_array($attribute, [self::VIEW, self::PAY], true)
+            && $subject instanceof Purchase;
     }
 
     /**
@@ -38,6 +40,7 @@ final class PurchaseVoter extends Voter
 
         return match ($attribute) {
             self::VIEW => $this->canView($subject, $user),
+            self::PAY => $this->canPay($subject, $user),
             default => false,
         };
     }
@@ -45,5 +48,11 @@ final class PurchaseVoter extends Voter
     private function canView(Purchase $purchase, User $user): bool
     {
         return $purchase->getUser() === $user;
+    }
+
+    private function canPay(Purchase $purchase, User $user): bool
+    {
+        return $purchase->getUser() === $user
+            && $purchase->isPending();
     }
 }

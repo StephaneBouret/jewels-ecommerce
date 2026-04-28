@@ -45,7 +45,7 @@ final class PurchaseCheckoutController extends AbstractController
 
             $this->addFlash('success', 'Votre commande a bien été enregistrée.');
 
-            return $this->redirectToRoute('app_purchase_confirm', [
+            return $this->redirectToRoute('app_purchase_payment', [
                 'id' => $purchase->getId(),
             ]);
         }

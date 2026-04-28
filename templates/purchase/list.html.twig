@@ -1,0 +1,117 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mes commandes
+{% endblock %}
+
+{% block body %}
+    <div class="ykzkxt d6i7ks">
+        <div class="d-flex">
+            <div class="w-100">
+                <div class="d-md-flex justify-content-md-between align-items-center spacer-section-checkout">
+                    <div class="flex-fill mb-6 mb-md-0">
+                        <h1 class="pr-md-6 bkicbc">Mes commandes</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if purchases is empty %}
+            <div class="alert alert-info mt-4">Aucune commande pour le moment.</div>
+        {% else %}
+            <div class="wwz44q">
+                {% for purchase in purchases %}
+                    <div class="xo2a4n">
+                        <div class="ixxz17">
+                            <div class="space-y-1">
+
+                                <div class="hp7ucm">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 py-1 d-none d-md-block font-weight-bold">
+                                            N° de commande
+                                        </div>
+                                        <div class="col-12 col-md-8 py-1">
+                                            <div class="d-md-none font-weight-bold">N° de commande</div>
+                                            <div class="text-truncate text-wrap">
+                                                #{{ purchase.number }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hp7ucm">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 py-1 d-none d-md-block font-weight-bold">
+                                            Date
+                                        </div>
+                                        <div class="col-12 col-md-8 py-1">
+                                            <div class="d-md-none font-weight-bold">Date</div>
+                                            <div class="text-truncate text-wrap">
+                                                {{ purchase.purchasedAt|format_datetime('long', 'short', timezone='Europe/Paris', locale='fr') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hp7ucm">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 py-1 d-none d-md-block font-weight-bold">
+                                            Produits
+                                        </div>
+                                        <div class="col-12 col-md-8 py-1">
+                                            <div class="d-md-none font-weight-bold">Produits</div>
+
+                                            {% for item in purchase.purchaseItems %}
+                                                <div class="mb-1">
+                                                    {{ item.productName }}
+                                                    —
+                                                    {{ item.productColor }}
+                                                    × {{ item.quantity }}
+                                                    <span class="text-muted">({{ item.total|amount }})</span>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Aucun produit</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hp7ucm">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 py-1 d-none d-md-block font-weight-bold">
+                                            Total
+                                        </div>
+                                        <div class="col-12 col-md-8 py-1">
+                                            <div class="d-md-none font-weight-bold">Total</div>
+                                            <strong>{{ purchase.total|amount }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hp7ucm">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 py-1 d-none d-md-block font-weight-bold">
+                                            Statut
+                                        </div>
+                                        <div class="col-12 col-md-8 py-1">
+                                            <div class="d-md-none font-weight-bold">Statut</div>
+
+                                            {% if purchase.status == constant('App\\Enum\\PurchaseStatus::PAID') %}
+                                                <span class="badge text-bg-success">{{ purchase.status.label() }}</span>
+                                            {% elseif purchase.status == constant('App\\Enum\\PurchaseStatus::CANCELLED') %}
+                                                <span class="badge text-bg-danger">{{ purchase.status.label() }}</span>
+                                            {% else %}
+                                                <span class="badge text-bg-secondary">{{ purchase.status.label() }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
